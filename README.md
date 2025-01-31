@@ -1,2 +1,2 @@
-# single-task-runner-
+# single-task-runner
 Minimal single threaded callback runner
