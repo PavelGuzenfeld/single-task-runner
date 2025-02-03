@@ -23,6 +23,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
 else()
     set_debug_options(${PROJECT_NAME})
 endif()
+
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -36,6 +37,12 @@ target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME} fmt)
 
 set_debug_options(${PROJECT_NAME}_test)
 enable_sanitizers(${PROJECT_NAME}_test)
+
+# Install public headers so that the INSTALL_INTERFACE path exists.
+install(
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    DESTINATION include
+)
 
 # Export the target
 install(
