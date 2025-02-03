@@ -18,6 +18,10 @@ find_package(fmt REQUIRED)
 
 # Runner library
 add_library(${PROJECT_NAME} STATIC src/runner.cpp)
+
+# Ensure PIC is enabled for this target.
+set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     set_release_options(${PROJECT_NAME})
 else()
