@@ -23,7 +23,11 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
 else()
     set_debug_options(${PROJECT_NAME})
 endif()
-target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
 target_link_libraries(${PROJECT_NAME} PRIVATE fmt)
 
 # executable and linking
@@ -33,9 +37,35 @@ target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME} fmt)
 set_debug_options(${PROJECT_NAME}_test)
 enable_sanitizers(${PROJECT_NAME}_test)
 
-# installation
+# Export the target
 install(
-    TARGETS ${PROJECT_NAME} DESTINATION lib
+    TARGETS ${PROJECT_NAME}
+    EXPORT single-task-runnerTargets
+    DESTINATION lib
     INCLUDES DESTINATION include
 )
-install(TARGETS ${PROJECT_NAME}_test DESTINATION bin)
+
+# Install the export file
+install(
+    EXPORT single-task-runnerTargets
+    FILE single-task-runnerTargets.cmake
+    NAMESPACE single-task-runner::
+    DESTINATION lib/cmake/single-task-runner
+)
+
+# Configure package files
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/single-task-runnerConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/single-task-runnerConfig.cmake"
+  INSTALL_DESTINATION lib/cmake/single-task-runner
+  NO_SET_AND_CHECK_MACRO
+  NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+
+# Install the package configuration files
+install(
+  FILES 
+    "${CMAKE_CURRENT_BINARY_DIR}/single-task-runnerConfig.cmake"
+  DESTINATION lib/cmake/single-task-runner
+)
