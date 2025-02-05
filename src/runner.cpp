@@ -171,6 +171,11 @@ namespace run
         {
             return;
         }
+        
+        if (pimpl_->stop_flag_ == true)
+        {
+            return;
+        }
         std::unique_lock lock(pimpl_->mutex_);
         pimpl_->cv_.wait(lock, [this]
                          { return pimpl_->task_counter_ == 0; });
