@@ -26,6 +26,7 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
     set_release_options(${PROJECT_NAME})
 else()
     set_debug_options(${PROJECT_NAME})
+    enable_sanitizers(${PROJECT_NAME})
 endif()
 
 target_include_directories(${PROJECT_NAME}
